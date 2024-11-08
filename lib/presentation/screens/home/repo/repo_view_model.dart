@@ -1,23 +1,27 @@
 part of 'repo_imports.dart';
 
-class RepoViewModel{
+class RepoViewModel {
   final Repositories repositories;
 
   RepoViewModel({required this.repositories});
 
-  VelocityBloc<RepoModel> repoModelBloc = VelocityBloc<RepoModel>(RepoModel());
-  
+  VelocityBloc<List<RepoModel>> repoModelBloc =
+      VelocityBloc<List<RepoModel>>([]);
+
   fetchAllPosts() async {
-  try {
-    var repoData = await repositories.gitRepo.getAllRepos();
-    Vx.log(repoData);
-    if (repoData.id != null) {
-      repoModelBloc.onUpdateData(repoData);
+    try {
+      var postsData = await repositories.gitRepo.getAllRepos();
+      Vx.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+      Vx.log(postsData);
+      Vx.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+      repoModelBloc.onUpdateData(postsData);
+      // if (postsData.status == 1) {
+
+      // }
+    } catch (e) {
+      Vx.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+      Vx.log('Error fetching posts: $e');
+      Vx.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     }
-  } catch (e) {
-    Vx.log('Error fetching posts: $e');
   }
-}
-
-
 }

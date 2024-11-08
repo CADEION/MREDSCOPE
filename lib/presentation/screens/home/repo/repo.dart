@@ -20,8 +20,8 @@ class _RepoState extends State<Repo> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child:
-                BlocBuilder<VelocityBloc<RepoModel>, VelocityState<RepoModel>>(
+            child: BlocBuilder<VelocityBloc<List<RepoModel>>,
+                VelocityState<List<RepoModel>>>(
       bloc: repoViewModel.repoModelBloc,
       builder: (context, state) {
         if (state is VelocityInitialState) {
@@ -30,17 +30,17 @@ class _RepoState extends State<Repo> {
           );
         } else if (state is VelocityUpdateState) {
           return ListView.separated(
-            itemCount: 6,
+            itemCount: state.data.length,
             itemBuilder: (context, index) {
+              final repoData = state.data[index];
               return RepoCard(
-                repoName: 'rustrover v2024.2',
-                createdAt: '2024-11-07T16:07:43Z',
-                commentCount: 69,
+                repoName: repoData.owner!.login!,
+                createdAt: repoData.createdAt.toString(),
+                commentCount: repoData.comments!,
                 avatarUrl:
-                    'https://avatars.githubusercontent.com/u/6270979?v=4',
-                description:
-                    state.data.description!,
-                updatedAt: '2024-11-07T16:07:43Z',
+                    repoData.owner!.avatarUrl!,
+                description: state.data[index].description ?? 'No description',
+                updatedAt: repoData.updatedAt.toString(),
               );
             },
             separatorBuilder: (BuildContext context, int index) {
