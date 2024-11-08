@@ -33,14 +33,26 @@ class _RepoState extends State<Repo> {
             itemCount: state.data.length,
             itemBuilder: (context, index) {
               final repoData = state.data[index];
-              return RepoCard(
-                repoName: repoData.owner!.login!,
-                createdAt: repoData.createdAt.toString(),
-                commentCount: repoData.comments!,
-                avatarUrl:
-                    repoData.owner!.avatarUrl!,
-                description: state.data[index].description ?? 'No description',
-                updatedAt: repoData.updatedAt.toString(),
+              return GestureDetector(
+                onLongPress: (){
+          //         Navigator.push(
+          // context, MaterialPageRoute(builder: (context) => OwnerDetailScreen(ownerData: repoData,))
+          // );
+                },
+                onTap: ()async{
+                  showDialog(context: context, builder: (context){
+                    return repoViewModel.SimpleDialogBox(repoData);
+                  });
+                },
+                child: RepoCard(
+                  repoName: repoData.owner!.login!,
+                  createdAt: repoData.createdAt.toString(),
+                  commentCount: repoData.comments!,
+                  avatarUrl:
+                      repoData.owner!.avatarUrl!,
+                  description: state.data[index].description ?? 'No description',
+                  updatedAt: repoData.updatedAt.toString(),
+                ),
               );
             },
             separatorBuilder: (BuildContext context, int index) {
