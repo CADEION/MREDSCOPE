@@ -8,16 +8,55 @@ class Galllery extends StatefulWidget {
 }
 
 class _GallleryState extends State<Galllery> {
+  late GallleryViewModel gallleryViewModel;
+
+  @override
+  void initState() {
+    gallleryViewModel = GallleryViewModel(repositories: context.read<Repositories>());
+    gallleryViewModel.getImageData(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: RepoCard(
-      repoName: 'rustrover v2024.2',
-      createdAt: '2024-11-07T16:07:43Z',
-      commentCount: 69,
-      avatarUrl: 'https://avatars.githubusercontent.com/u/6270979?v=4',
-      description: 'rustrover v2024.2 - Failed - Package Tests Results',
-      updatedAt: '2024-11-07T16:07:43Z',
-    ));
+      body: SafeArea(
+          child: BlocBuilder<VelocityBloc<GalleryModel>,
+              VelocityState<GalleryModel>>(
+        bloc: gallleryViewModel.galleryModelBloc,
+        builder: (context, state) {
+          if (state is VelocityInitialState) {
+            return Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          } else if (state is VelocityUpdateState) {
+            return ListView.separated(
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Card(
+                      child: Image(
+                        image: NetworkImage(state.data.urls!.regular!),
+                      ).cornerRadius(10),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: 5,
+                  );
+                },
+                itemCount: 6);
+          } else if (state is VelocityFailedState) {
+            return Center(
+              child: state.error.text.make(),
+            );
+          }
+          return SizedBox(
+            child: "data".text.make(),
+          );
+        },
+      )),
+    );
   }
 }

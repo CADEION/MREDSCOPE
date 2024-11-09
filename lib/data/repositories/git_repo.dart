@@ -18,8 +18,8 @@ class GitRepo extends ApiClient {
         final body = response.data;
         
         // Debug logging
-        debugPrint('Raw Data received: $body');
-        Vx.log('DATA: $body');
+        // debugPrint('Raw Data received: $body');
+        // Vx.log('DATA: ${body.toString().substring(300)}');
 
         if (body is List && body.isNotEmpty) {
           try {

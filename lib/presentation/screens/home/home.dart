@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: IndexedStack(index: visit,children: pages,),
+      body: pages.elementAt(visit),
       bottomNavigationBar: BottomBarInspiredInside(
               items: items,
               backgroundColor: Colors.blueAccent,
@@ -50,3 +50,5 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+// IndexedStack(index: visit,children: pages,),
