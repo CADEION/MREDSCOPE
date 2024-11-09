@@ -34,23 +34,24 @@ class _RepoState extends State<Repo> {
             itemBuilder: (context, index) {
               final repoData = state.data[index];
               return GestureDetector(
-                onLongPress: (){
-          //         Navigator.push(
-          // context, MaterialPageRoute(builder: (context) => OwnerDetailScreen(ownerData: repoData,))
-          // );
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FileDetails(repoData: repoData, index: index,)));
                 },
-                onTap: ()async{
-                  showDialog(context: context, builder: (context){
-                    return repoViewModel.SimpleDialogBox(repoData);
-                  });
+                onLongPress: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return repoViewModel.SimpleDialogBox(repoData);
+                      });
                 },
                 child: RepoCard(
                   repoName: repoData.owner!.login!,
                   createdAt: repoData.createdAt.toString(),
                   commentCount: repoData.comments!,
-                  avatarUrl:
-                      repoData.owner!.avatarUrl!,
-                  description: state.data[index].description ?? 'No description',
+                  avatarUrl: repoData.owner!.avatarUrl!,
+                  description:
+                      state.data[index].description ?? 'No description',
                   updatedAt: repoData.updatedAt.toString(),
                 ),
               );

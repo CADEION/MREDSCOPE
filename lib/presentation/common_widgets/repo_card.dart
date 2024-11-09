@@ -59,12 +59,14 @@ class RepoCard extends StatelessWidget {
                       .overflow(TextOverflow.ellipsis)
                       .make(),
                   10.h.heightBox,
-                  createdAt.text.medium.make(),
+                  'Created At  : ${createdAt}'.text.medium.make(),
+                  
                   2.h.heightBox,
-                  updatedAt.text.medium.make(),
+                  'Updated At :${updatedAt}:'.text.medium.make(),
+                  
                   2.h.heightBox,
-                  commentCount.text.medium.make(),
-                  2.h.heightBox,
+                  'Comment Count: ${commentCount}'.text.medium.make(),
+                  10.h.heightBox,
                 ],
               ),
             ),

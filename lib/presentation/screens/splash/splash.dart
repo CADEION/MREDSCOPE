@@ -28,11 +28,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       backgroundColor: Color(0xffFE5F55),
       body: Center(
-        child: Image.asset(
-          MyAssets.assetsImagesRedLogo,
-          height: 42.h,
-          width: 139.h,
-        ),
+        child: Image(image: AssetImage(MyAssets.assetsImagesRedLogo,),height: 400,).cornerRadius(50)
       ),
     );
   }

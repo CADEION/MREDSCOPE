@@ -9,6 +9,8 @@ import 'package:mredscope/presentation/screens/home/repo/repo_model.dart';
 import 'package:velocity_bloc/velocity_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'file_details/file_details_imports.dart';
+
 
 
 part 'repo.dart';
