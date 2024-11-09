@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-GalleryModel galleryModelFromJson(String str) => GalleryModel.fromJson(json.decode(str));
+List<GalleryModel> galleryModelFromJson(String str) => List<GalleryModel>.from(json.decode(str).map((x) => GalleryModel.fromJson(x)));
 
-String galleryModelToJson(GalleryModel data) => json.encode(data.toJson());
+String galleryModelToJson(List<GalleryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class GalleryModel {
     String? id;
@@ -19,7 +19,7 @@ class GalleryModel {
     int? height;
     String? color;
     String? blurHash;
-    dynamic description;
+    String? description;
     String? altDescription;
     List<dynamic>? breadcrumbs;
     Urls? urls;
@@ -27,18 +27,10 @@ class GalleryModel {
     int? likes;
     bool? likedByUser;
     List<dynamic>? currentUserCollections;
-    dynamic sponsorship;
-    GalleryModelTopicSubmissions? topicSubmissions;
-    String? assetType;
+    Sponsorship? sponsorship;
+    TopicSubmissions? topicSubmissions;
+    AssetType? assetType;
     User? user;
-    Exif? exif;
-    Location? location;
-    Meta? meta;
-    bool? publicDomain;
-    List<Tag>? tags;
-    int? views;
-    int? downloads;
-    List<Topic>? topics;
 
     GalleryModel({
         this.id,
@@ -63,14 +55,6 @@ class GalleryModel {
         this.topicSubmissions,
         this.assetType,
         this.user,
-        this.exif,
-        this.location,
-        this.meta,
-        this.publicDomain,
-        this.tags,
-        this.views,
-        this.downloads,
-        this.topics,
     });
 
     factory GalleryModel.fromJson(Map<String, dynamic> json) => GalleryModel(
@@ -92,18 +76,10 @@ class GalleryModel {
         likes: json["likes"],
         likedByUser: json["liked_by_user"],
         currentUserCollections: json["current_user_collections"] == null ? [] : List<dynamic>.from(json["current_user_collections"]!.map((x) => x)),
-        sponsorship: json["sponsorship"],
-        topicSubmissions: json["topic_submissions"] == null ? null : GalleryModelTopicSubmissions.fromJson(json["topic_submissions"]),
-        assetType: json["asset_type"],
+        sponsorship: json["sponsorship"] == null ? null : Sponsorship.fromJson(json["sponsorship"]),
+        topicSubmissions: json["topic_submissions"] == null ? null : TopicSubmissions.fromJson(json["topic_submissions"]),
+        assetType: assetTypeValues.map[json["asset_type"]]!,
         user: json["user"] == null ? null : User.fromJson(json["user"]),
-        exif: json["exif"] == null ? null : Exif.fromJson(json["exif"]),
-        location: json["location"] == null ? null : Location.fromJson(json["location"]),
-        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
-        publicDomain: json["public_domain"],
-        tags: json["tags"] == null ? [] : List<Tag>.from(json["tags"]!.map((x) => Tag.fromJson(x))),
-        views: json["views"],
-        downloads: json["downloads"],
-        topics: json["topics"] == null ? [] : List<Topic>.from(json["topics"]!.map((x) => Topic.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -125,18 +101,10 @@ class GalleryModel {
         "likes": likes,
         "liked_by_user": likedByUser,
         "current_user_collections": currentUserCollections == null ? [] : List<dynamic>.from(currentUserCollections!.map((x) => x)),
-        "sponsorship": sponsorship,
+        "sponsorship": sponsorship?.toJson(),
         "topic_submissions": topicSubmissions?.toJson(),
-        "asset_type": assetType,
+        "asset_type": assetTypeValues.reverse[assetType],
         "user": user?.toJson(),
-        "exif": exif?.toJson(),
-        "location": location?.toJson(),
-        "meta": meta?.toJson(),
-        "public_domain": publicDomain,
-        "tags": tags == null ? [] : List<dynamic>.from(tags!.map((x) => x.toJson())),
-        "views": views,
-        "downloads": downloads,
-        "topics": topics == null ? [] : List<dynamic>.from(topics!.map((x) => x.toJson())),
     };
 }
 
@@ -184,45 +152,13 @@ class AlternativeSlugs {
     };
 }
 
-class Exif {
-    String? make;
-    String? model;
-    String? name;
-    dynamic exposureTime;
-    dynamic aperture;
-    dynamic focalLength;
-    dynamic iso;
-
-    Exif({
-        this.make,
-        this.model,
-        this.name,
-        this.exposureTime,
-        this.aperture,
-        this.focalLength,
-        this.iso,
-    });
-
-    factory Exif.fromJson(Map<String, dynamic> json) => Exif(
-        make: json["make"],
-        model: json["model"],
-        name: json["name"],
-        exposureTime: json["exposure_time"],
-        aperture: json["aperture"],
-        focalLength: json["focal_length"],
-        iso: json["iso"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "make": make,
-        "model": model,
-        "name": name,
-        "exposure_time": exposureTime,
-        "aperture": aperture,
-        "focal_length": focalLength,
-        "iso": iso,
-    };
+enum AssetType {
+    PHOTO
 }
+
+final assetTypeValues = EnumValues({
+    "photo": AssetType.PHOTO
+});
 
 class GalleryModelLinks {
     String? self;
@@ -252,371 +188,31 @@ class GalleryModelLinks {
     };
 }
 
-class Location {
-    String? name;
-    String? city;
-    String? country;
-    Position? position;
+class Sponsorship {
+    List<String>? impressionUrls;
+    String? tagline;
+    String? taglineUrl;
+    User? sponsor;
 
-    Location({
-        this.name,
-        this.city,
-        this.country,
-        this.position,
+    Sponsorship({
+        this.impressionUrls,
+        this.tagline,
+        this.taglineUrl,
+        this.sponsor,
     });
 
-    factory Location.fromJson(Map<String, dynamic> json) => Location(
-        name: json["name"],
-        city: json["city"],
-        country: json["country"],
-        position: json["position"] == null ? null : Position.fromJson(json["position"]),
+    factory Sponsorship.fromJson(Map<String, dynamic> json) => Sponsorship(
+        impressionUrls: json["impression_urls"] == null ? [] : List<String>.from(json["impression_urls"]!.map((x) => x)),
+        tagline: json["tagline"],
+        taglineUrl: json["tagline_url"],
+        sponsor: json["sponsor"] == null ? null : User.fromJson(json["sponsor"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "name": name,
-        "city": city,
-        "country": country,
-        "position": position?.toJson(),
-    };
-}
-
-class Position {
-    double? latitude;
-    double? longitude;
-
-    Position({
-        this.latitude,
-        this.longitude,
-    });
-
-    factory Position.fromJson(Map<String, dynamic> json) => Position(
-        latitude: json["latitude"]?.toDouble(),
-        longitude: json["longitude"]?.toDouble(),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "latitude": latitude,
-        "longitude": longitude,
-    };
-}
-
-class Meta {
-    bool? index;
-
-    Meta({
-        this.index,
-    });
-
-    factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        index: json["index"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "index": index,
-    };
-}
-
-class Tag {
-    Type? type;
-    String? title;
-    Source? source;
-
-    Tag({
-        this.type,
-        this.title,
-        this.source,
-    });
-
-    factory Tag.fromJson(Map<String, dynamic> json) => Tag(
-        type: typeValues.map[json["type"]]!,
-        title: json["title"],
-        source: json["source"] == null ? null : Source.fromJson(json["source"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "type": typeValues.reverse[type],
-        "title": title,
-        "source": source?.toJson(),
-    };
-}
-
-class Source {
-    Ancestry? ancestry;
-    String? title;
-    String? subtitle;
-    String? description;
-    dynamic redirect;
-    String? metaTitle;
-    String? metaDescription;
-    CoverPhoto? coverPhoto;
-    dynamic affiliateSearchQuery;
-
-    Source({
-        this.ancestry,
-        this.title,
-        this.subtitle,
-        this.description,
-        this.redirect,
-        this.metaTitle,
-        this.metaDescription,
-        this.coverPhoto,
-        this.affiliateSearchQuery,
-    });
-
-    factory Source.fromJson(Map<String, dynamic> json) => Source(
-        ancestry: json["ancestry"] == null ? null : Ancestry.fromJson(json["ancestry"]),
-        title: json["title"],
-        subtitle: json["subtitle"],
-        description: json["description"],
-        redirect: json["redirect"],
-        metaTitle: json["meta_title"],
-        metaDescription: json["meta_description"],
-        coverPhoto: json["cover_photo"] == null ? null : CoverPhoto.fromJson(json["cover_photo"]),
-        affiliateSearchQuery: json["affiliate_search_query"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "ancestry": ancestry?.toJson(),
-        "title": title,
-        "subtitle": subtitle,
-        "description": description,
-        "redirect": redirect,
-        "meta_title": metaTitle,
-        "meta_description": metaDescription,
-        "cover_photo": coverPhoto?.toJson(),
-        "affiliate_search_query": affiliateSearchQuery,
-    };
-}
-
-class Ancestry {
-    Category? type;
-    Category? category;
-    Category? subcategory;
-
-    Ancestry({
-        this.type,
-        this.category,
-        this.subcategory,
-    });
-
-    factory Ancestry.fromJson(Map<String, dynamic> json) => Ancestry(
-        type: json["type"] == null ? null : Category.fromJson(json["type"]),
-        category: json["category"] == null ? null : Category.fromJson(json["category"]),
-        subcategory: json["subcategory"] == null ? null : Category.fromJson(json["subcategory"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "type": type?.toJson(),
-        "category": category?.toJson(),
-        "subcategory": subcategory?.toJson(),
-    };
-}
-
-class Category {
-    String? slug;
-    String? prettySlug;
-    dynamic redirect;
-
-    Category({
-        this.slug,
-        this.prettySlug,
-        this.redirect,
-    });
-
-    factory Category.fromJson(Map<String, dynamic> json) => Category(
-        slug: json["slug"],
-        prettySlug: json["pretty_slug"],
-        redirect: json["redirect"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "slug": slug,
-        "pretty_slug": prettySlug,
-        "redirect": redirect,
-    };
-}
-
-class CoverPhoto {
-    String? id;
-    String? slug;
-    AlternativeSlugs? alternativeSlugs;
-    DateTime? createdAt;
-    DateTime? updatedAt;
-    DateTime? promotedAt;
-    int? width;
-    int? height;
-    String? color;
-    String? blurHash;
-    dynamic description;
-    String? altDescription;
-    List<dynamic>? breadcrumbs;
-    Urls? urls;
-    GalleryModelLinks? links;
-    int? likes;
-    bool? likedByUser;
-    List<dynamic>? currentUserCollections;
-    dynamic sponsorship;
-    CoverPhotoTopicSubmissions? topicSubmissions;
-    String? assetType;
-    bool? premium;
-    bool? plus;
-    User? user;
-
-    CoverPhoto({
-        this.id,
-        this.slug,
-        this.alternativeSlugs,
-        this.createdAt,
-        this.updatedAt,
-        this.promotedAt,
-        this.width,
-        this.height,
-        this.color,
-        this.blurHash,
-        this.description,
-        this.altDescription,
-        this.breadcrumbs,
-        this.urls,
-        this.links,
-        this.likes,
-        this.likedByUser,
-        this.currentUserCollections,
-        this.sponsorship,
-        this.topicSubmissions,
-        this.assetType,
-        this.premium,
-        this.plus,
-        this.user,
-    });
-
-    factory CoverPhoto.fromJson(Map<String, dynamic> json) => CoverPhoto(
-        id: json["id"],
-        slug: json["slug"],
-        alternativeSlugs: json["alternative_slugs"] == null ? null : AlternativeSlugs.fromJson(json["alternative_slugs"]),
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-        promotedAt: json["promoted_at"] == null ? null : DateTime.parse(json["promoted_at"]),
-        width: json["width"],
-        height: json["height"],
-        color: json["color"],
-        blurHash: json["blur_hash"],
-        description: json["description"],
-        altDescription: json["alt_description"],
-        breadcrumbs: json["breadcrumbs"] == null ? [] : List<dynamic>.from(json["breadcrumbs"]!.map((x) => x)),
-        urls: json["urls"] == null ? null : Urls.fromJson(json["urls"]),
-        links: json["links"] == null ? null : GalleryModelLinks.fromJson(json["links"]),
-        likes: json["likes"],
-        likedByUser: json["liked_by_user"],
-        currentUserCollections: json["current_user_collections"] == null ? [] : List<dynamic>.from(json["current_user_collections"]!.map((x) => x)),
-        sponsorship: json["sponsorship"],
-        topicSubmissions: json["topic_submissions"] == null ? null : CoverPhotoTopicSubmissions.fromJson(json["topic_submissions"]),
-        assetType: json["asset_type"],
-        premium: json["premium"],
-        plus: json["plus"],
-        user: json["user"] == null ? null : User.fromJson(json["user"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "slug": slug,
-        "alternative_slugs": alternativeSlugs?.toJson(),
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "promoted_at": promotedAt?.toIso8601String(),
-        "width": width,
-        "height": height,
-        "color": color,
-        "blur_hash": blurHash,
-        "description": description,
-        "alt_description": altDescription,
-        "breadcrumbs": breadcrumbs == null ? [] : List<dynamic>.from(breadcrumbs!.map((x) => x)),
-        "urls": urls?.toJson(),
-        "links": links?.toJson(),
-        "likes": likes,
-        "liked_by_user": likedByUser,
-        "current_user_collections": currentUserCollections == null ? [] : List<dynamic>.from(currentUserCollections!.map((x) => x)),
-        "sponsorship": sponsorship,
-        "topic_submissions": topicSubmissions?.toJson(),
-        "asset_type": assetType,
-        "premium": premium,
-        "plus": plus,
-        "user": user?.toJson(),
-    };
-}
-
-class CoverPhotoTopicSubmissions {
-    Film? health;
-    Film? people;
-
-    CoverPhotoTopicSubmissions({
-        this.health,
-        this.people,
-    });
-
-    factory CoverPhotoTopicSubmissions.fromJson(Map<String, dynamic> json) => CoverPhotoTopicSubmissions(
-        health: json["health"] == null ? null : Film.fromJson(json["health"]),
-        people: json["people"] == null ? null : Film.fromJson(json["people"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "health": health?.toJson(),
-        "people": people?.toJson(),
-    };
-}
-
-class Film {
-    String? status;
-    DateTime? approvedOn;
-
-    Film({
-        this.status,
-        this.approvedOn,
-    });
-
-    factory Film.fromJson(Map<String, dynamic> json) => Film(
-        status: json["status"],
-        approvedOn: json["approved_on"] == null ? null : DateTime.parse(json["approved_on"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "status": status,
-        "approved_on": approvedOn?.toIso8601String(),
-    };
-}
-
-class Urls {
-    String? raw;
-    String? full;
-    String? regular;
-    String? small;
-    String? thumb;
-    String? smallS3;
-
-    Urls({
-        this.raw,
-        this.full,
-        this.regular,
-        this.small,
-        this.thumb,
-        this.smallS3,
-    });
-
-    factory Urls.fromJson(Map<String, dynamic> json) => Urls(
-        raw: json["raw"],
-        full: json["full"],
-        regular: json["regular"],
-        small: json["small"],
-        thumb: json["thumb"],
-        smallS3: json["small_s3"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "raw": raw,
-        "full": full,
-        "regular": regular,
-        "small": small,
-        "thumb": thumb,
-        "small_s3": smallS3,
+        "impression_urls": impressionUrls == null ? [] : List<dynamic>.from(impressionUrls!.map((x) => x)),
+        "tagline": tagline,
+        "tagline_url": taglineUrl,
+        "sponsor": sponsor?.toJson(),
     };
 }
 
@@ -627,7 +223,7 @@ class User {
     String? name;
     String? firstName;
     String? lastName;
-    dynamic twitterUsername;
+    String? twitterUsername;
     String? portfolioUrl;
     String? bio;
     String? location;
@@ -787,7 +383,7 @@ class ProfileImage {
 class Social {
     String? instagramUsername;
     String? portfolioUrl;
-    dynamic twitterUsername;
+    String? twitterUsername;
     dynamic paypalEmail;
 
     Social({
@@ -812,57 +408,119 @@ class Social {
     };
 }
 
-enum Type {
-    LANDING_PAGE,
-    SEARCH
-}
+class TopicSubmissions {
+    Experimental? experimental;
+    Experimental? people;
+    ArchitectureInterior? architectureInterior;
+    ArchitectureInterior? nature;
+    Experimental? wallpapers;
+    ArchitectureInterior? travel;
+    ArchitectureInterior? businessWork;
+    Experimental? fashionBeauty;
 
-final typeValues = EnumValues({
-    "landing_page": Type.LANDING_PAGE,
-    "search": Type.SEARCH
-});
-
-class GalleryModelTopicSubmissions {
-    Film? film;
-
-    GalleryModelTopicSubmissions({
-        this.film,
+    TopicSubmissions({
+        this.experimental,
+        this.people,
+        this.architectureInterior,
+        this.nature,
+        this.wallpapers,
+        this.travel,
+        this.businessWork,
+        this.fashionBeauty,
     });
 
-    factory GalleryModelTopicSubmissions.fromJson(Map<String, dynamic> json) => GalleryModelTopicSubmissions(
-        film: json["film"] == null ? null : Film.fromJson(json["film"]),
+    factory TopicSubmissions.fromJson(Map<String, dynamic> json) => TopicSubmissions(
+        experimental: json["experimental"] == null ? null : Experimental.fromJson(json["experimental"]),
+        people: json["people"] == null ? null : Experimental.fromJson(json["people"]),
+        architectureInterior: json["architecture-interior"] == null ? null : ArchitectureInterior.fromJson(json["architecture-interior"]),
+        nature: json["nature"] == null ? null : ArchitectureInterior.fromJson(json["nature"]),
+        wallpapers: json["wallpapers"] == null ? null : Experimental.fromJson(json["wallpapers"]),
+        travel: json["travel"] == null ? null : ArchitectureInterior.fromJson(json["travel"]),
+        businessWork: json["business-work"] == null ? null : ArchitectureInterior.fromJson(json["business-work"]),
+        fashionBeauty: json["fashion-beauty"] == null ? null : Experimental.fromJson(json["fashion-beauty"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "film": film?.toJson(),
+        "experimental": experimental?.toJson(),
+        "people": people?.toJson(),
+        "architecture-interior": architectureInterior?.toJson(),
+        "nature": nature?.toJson(),
+        "wallpapers": wallpapers?.toJson(),
+        "travel": travel?.toJson(),
+        "business-work": businessWork?.toJson(),
+        "fashion-beauty": fashionBeauty?.toJson(),
     };
 }
 
-class Topic {
-    String? id;
-    String? title;
-    String? slug;
-    String? visibility;
+class ArchitectureInterior {
+    String? status;
+    DateTime? approvedOn;
 
-    Topic({
-        this.id,
-        this.title,
-        this.slug,
-        this.visibility,
+    ArchitectureInterior({
+        this.status,
+        this.approvedOn,
     });
 
-    factory Topic.fromJson(Map<String, dynamic> json) => Topic(
-        id: json["id"],
-        title: json["title"],
-        slug: json["slug"],
-        visibility: json["visibility"],
+    factory ArchitectureInterior.fromJson(Map<String, dynamic> json) => ArchitectureInterior(
+        status: json["status"],
+        approvedOn: json["approved_on"] == null ? null : DateTime.parse(json["approved_on"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "slug": slug,
-        "visibility": visibility,
+        "status": status,
+        "approved_on": approvedOn?.toIso8601String(),
+    };
+}
+
+class Experimental {
+    String? status;
+
+    Experimental({
+        this.status,
+    });
+
+    factory Experimental.fromJson(Map<String, dynamic> json) => Experimental(
+        status: json["status"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "status": status,
+    };
+}
+
+class Urls {
+    String? raw;
+    String? full;
+    String? regular;
+    String? small;
+    String? thumb;
+    String? smallS3;
+
+    Urls({
+        this.raw,
+        this.full,
+        this.regular,
+        this.small,
+        this.thumb,
+        this.smallS3,
+    });
+
+    factory Urls.fromJson(Map<String, dynamic> json) => Urls(
+        raw: json["raw"],
+        full: json["full"],
+        regular: json["regular"],
+        small: json["small"],
+        thumb: json["thumb"],
+        smallS3: json["small_s3"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "raw": raw,
+        "full": full,
+        "regular": regular,
+        "small": small,
+        "thumb": thumb,
+        "small_s3": smallS3,
     };
 }
 

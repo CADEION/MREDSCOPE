@@ -21,8 +21,8 @@ class _GallleryState extends State<Galllery> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: BlocBuilder<VelocityBloc<GalleryModel>,
-              VelocityState<GalleryModel>>(
+          child: BlocBuilder<VelocityBloc<List<GalleryModel>>,
+              VelocityState<List<GalleryModel>>>(
         bloc: gallleryViewModel.galleryModelBloc,
         builder: (context, state) {
           if (state is VelocityInitialState) {
@@ -32,11 +32,12 @@ class _GallleryState extends State<Galllery> {
           } else if (state is VelocityUpdateState) {
             return ListView.separated(
                 itemBuilder: (context, index) {
+                  final galleryData = state.data[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Card(
                       child: Image(
-                        image: NetworkImage(state.data.urls!.regular!),
+                        image: NetworkImage(galleryData.urls!.regular!),height: 200, fit: BoxFit.cover,
                       ).cornerRadius(10),
                     ),
                   );
@@ -46,7 +47,7 @@ class _GallleryState extends State<Galllery> {
                     height: 5,
                   );
                 },
-                itemCount: 6);
+                itemCount: state.data.length);
           } else if (state is VelocityFailedState) {
             return Center(
               child: state.error.text.make(),
