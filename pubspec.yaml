@@ -38,6 +38,7 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   flutter_screenutil: ^5.9.3
   i18n_extension: ^13.0.2
+  photo_view: ^0.15.0
   shared_preferences: ^2.3.2
   velocity_bloc: ^1.2.0
   velocity_x: ^4.2.1

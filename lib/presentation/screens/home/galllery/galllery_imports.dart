@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 import 'package:mredscope/core/constants/my_assets.dart';
 import 'package:mredscope/data/repositories/git_repo.dart';
+import 'package:mredscope/presentation/screens/home/galllery/image_screen/image_screen_imports.dart';
 import 'package:mredscope/presentation/screens/home/repo/repo_imports.dart';
 import 'package:velocity_bloc/velocity_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';

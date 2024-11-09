@@ -12,7 +12,8 @@ class _GallleryState extends State<Galllery> {
 
   @override
   void initState() {
-    gallleryViewModel = GallleryViewModel(repositories: context.read<Repositories>());
+    gallleryViewModel =
+        GallleryViewModel(repositories: context.read<Repositories>());
     gallleryViewModel.getImageData(context);
     super.initState();
   }
@@ -20,6 +21,11 @@ class _GallleryState extends State<Galllery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.favorite))
+        ],
+      ),
       body: SafeArea(
           child: BlocBuilder<VelocityBloc<List<GalleryModel>>,
               VelocityState<List<GalleryModel>>>(
@@ -35,10 +41,20 @@ class _GallleryState extends State<Galllery> {
                   final galleryData = state.data[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Card(
-                      child: Image(
-                        image: NetworkImage(galleryData.urls!.regular!),height: 200, fit: BoxFit.cover,
-                      ).cornerRadius(10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ImageScreen(galleryData: galleryData,)));
+                      },
+                      child: Card(
+                        child: Image(
+                          image: NetworkImage(galleryData.urls!.regular!),
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ).cornerRadius(10),
+                      ),
                     ),
                   );
                 },

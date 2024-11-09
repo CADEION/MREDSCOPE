@@ -33,10 +33,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: pages.elementAt(visit),
+      body: IndexedStack(index: visit,children: pages,),
       bottomNavigationBar: BottomBarInspiredInside(
               items: items,
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xffFE5F55),
               color: Colors.white,
               colorSelected: Colors.white,
               indexSelected: visit,
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
               }),
               chipStyle:const ChipStyle(convexBridge: true),
               itemStyle: ItemStyle.circle,
-              animated: false,
+              animated: true,
             ),
     );
   }
